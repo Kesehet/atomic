@@ -363,7 +363,7 @@ class AtomicGetAccessTokenFluentFunctionTest extends TransactSDKUnitTest {
         String mockResponse = testParams[mockResponseResourceName]
         List<Product> products = Product.restoreProductsFromXml(dashboardTxnProxy.getAppDoc())
         products = Product.filterForConsumerDepositProducts(products)
-        Map<String, String> existingAccountsMap = AtomicGetAccessTokenFluentFunction.getExistingAccountsMap(consumerPostApprovalTxnProxy)
+        Map<String, String> existingAccountsMap = AccessTokenRequestHelper.getExistingAccountsMap(consumerPostApprovalTxnProxy)
         AtomicCreateAccessTokenRequest request = new AtomicQuery(logger, dashboardTxnProxy).buildCreateAccessTokenRequest(products, existingAccountsMap, existingAccountsMap)
         TestUtils.registerMockRequestResponse(request, responseStatus, mockResponse)
     }

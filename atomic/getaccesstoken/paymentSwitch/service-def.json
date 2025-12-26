@@ -1,6 +1,6 @@
 {
-  "name": "Atomic - Get Access Token Fluent Function",
-  "description": "For calling Atomic API and retrieving access token",
+  "name": "Atomic - Get Access Token (Payment Switch) Fluent Function",
+  "description": "For calling Atomic API and retrieving a Payment Switch access token",
   "type": "Fluent Function",
   "tmMinVersion": "17.10.0",
   "version": "${application-service-version-common}",
@@ -72,6 +72,7 @@
         "com/temenos/fnb/gsvc/atomic/api/vo/Identity.groovy",
         "com/temenos/fnb/gsvc/atomic/api/vo/Data.groovy",
         "com/temenos/fnb/gsvc/atomic/enums/AtomicTransactStatus.groovy",
+        "com/temenos/fnb/gsvc/atomic/getaccesstoken/AccessTokenRequestHelper.groovy",
         "com/temenos/fnb/gsvc/atomic/reporter/AtomicReporter.groovy",
         "com/temenos/fnb/gsvc/atomic/utils/AtomicUtils.groovy",
         "com/temenos/fnb/gsvc/forms/FormInfoManager.groovy",

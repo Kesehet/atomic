@@ -6,14 +6,10 @@ import com.avoka.taf.dao.query.ProductRepositoryQuery
 import com.avoka.tm.func.FormFuncResult
 import com.avoka.tm.func.FuncParam
 import com.avoka.tm.func.FuncResult
-import com.avoka.tm.util.Logger
-import com.avoka.tm.vo.SvcDef
-import com.google.gson.Gson
 import com.temenos.fnb.gsvc.FnbBaseFluentFunction
 import com.temenos.fnb.gsvc.atomic.accesstoken.AccessTokenManager
 import com.temenos.fnb.gsvc.atomic.utils.AtomicUtils
 import com.temenos.fnb.gsvc.forms.FormInfoManager
-import com.temenos.fnb.utils.FiservUtils
 import com.temenos.fnb.utils.TxnProxy
 import groovy.json.JsonBuilder
 import groovy.transform.TypeChecked
@@ -22,9 +18,6 @@ import groovy.transform.TypeChecked
 class AtomicGetAccessTokenFluentFunction extends FnbBaseFluentFunction {
 
     static final String SERVICE_NAME = "getAccessToken"
-
-    static final String STATUS = "status"
-    static final String STATUS_ACTIVE = "Active"
 
     static final String TXN_PROP_SERVICE_PREFIX = "${AtomicUtils.TXN_PROP_PREFIX_ATOMIC}.${SERVICE_NAME}"
 
@@ -63,11 +56,7 @@ class AtomicGetAccessTokenFluentFunction extends FnbBaseFluentFunction {
         TxnProxy consumerPreApprovalTxnProxy = new FormInfoManager(txnProxy).getConsumerPreApprovalTxn()
         List<Product> productsSelected = Product.restoreProductsFromXml(consumerPreApprovalTxnProxy.getAppDoc())
         logger.info("found product from consumer preapproval Tran XML , size -->" + productsSelected.size())
-         Map<String, String> formProductsAcctMap = new HashMap<>();
-        for (Product p : productsSelected) {
-            logger.info("Product id and  Acct Number " + p.id + "_" + p.account.number)
-            formProductsAcctMap.put(p.id, p.account.number);
-        }
+        Map<String, String> formProductsAcctMap = AccessTokenRequestHelper.buildFormProductsAccountMap(productsSelected, logger)
 
         List<Product> consumerDepositProducts = Product.filterForConsumerDepositProducts(productsSelected)
         logger.info("consumerDepositProducts  after raw product filter , size -->" + consumerDepositProducts.size())
@@ -85,7 +74,7 @@ class AtomicGetAccessTokenFluentFunction extends FnbBaseFluentFunction {
                 }
             }
         }
-        List<Map<String, Object>> existingAccountsList = getDDSEligibleAccountsInfoList(consumerPostApprovalTxnProxy, param.svcDef, logger, ddsEligibleProductIds)
+        List<Map<String, Object>> existingAccountsList = AccessTokenRequestHelper.getDDSEligibleAccountsInfoList(consumerPostApprovalTxnProxy, logger, ddsEligibleProductIds)
         if (consumerDepositProductsDDSEligible.isEmpty() && existingAccountsList.isEmpty()) {
             logger.error("Did not get valid product or existing Account eligible for DDS..")
             return generateSuccessfulResult(RESULT_MESSAGE_NO_CONSUMER_DEPOSIT_PRODUCTS)
@@ -103,43 +92,6 @@ class AtomicGetAccessTokenFluentFunction extends FnbBaseFluentFunction {
         }
         logFuncResult(result, true, 100, logger)
         return result
-    }
-
-    static Map<String, String> getExistingAccountsMap(TxnProxy consumerPostApprovalTxnProxy) {
-        String txnPropKeyExistingAccounts = FiservUtils.buildExistingAccountsUUIDTxnPropKey(APPLICANT_KEY_PRIMARY)
-        String existingAccountsJson = consumerPostApprovalTxnProxy.getTxnProperty(txnPropKeyExistingAccounts) ?: ""
-        if (!existingAccountsJson) {
-            return [:]
-        }
-        Map<String, String> existingAccountsMap = new Gson().fromJson(existingAccountsJson, Map.class) ?: [:]
-        return existingAccountsMap
-    }
-
-    static List<Map<String, Object>> getDDSEligibleAccountsInfoList(TxnProxy consumerTxnProxy, SvcDef svcDef, Logger logger, List<String> ddsEligibleProductIds) {
-        String txnPropKey = FiservUtils.buildExistingAccountsInfoTxnPropKey(APPLICANT_KEY_PRIMARY)
-        String txnPropValue = consumerTxnProxy.getTxnProperty(txnPropKey)
-        if (txnPropValue == null || txnPropValue.isBlank()) {
-            logger.error("Did not get the correct existing account List from Fiserv .. Skipping the process")
-            return []
-        }
-        List<Map<String, Object>> existingAccountList = new Gson().fromJson(txnPropValue, List.class) ?: []
-        if (existingAccountList.isEmpty()) {
-            return []
-        }
-        Map<String, Object> accounts = existingAccountList.get(0) as Map<String, Object>
-        List<Map<String, Object>> existingAccountsInfoList = (List<Map<String, Object>>) accounts.get("accounts")
-        if (existingAccountList == null) {
-            return []
-        }
-
-        List<Map<String, Object>> ddsEligibleAccountsInfoList = existingAccountsInfoList.findAll { Map<String, Object> accountInfo ->
-            if (accountInfo.containsKey("productIdent")) {
-                String productId = accountInfo.get("productIdent")
-                if (productId in ddsEligibleProductIds && (accountInfo.get(STATUS) == null || ((String) accountInfo.get(STATUS)).equalsIgnoreCase(STATUS_ACTIVE))) {
-                    return accountInfo
-                }
-            }
-        }
     }
 
 }
