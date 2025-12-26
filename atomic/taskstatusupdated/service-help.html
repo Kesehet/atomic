@@ -1,0 +1,64 @@
+<h1>Groovy Service</h1>
+
+<p>
+Provides a generic Fluent API Groovy script service which can provide reusable scripts to be called by other services. 
+</p>
+
+<p>
+Please see the Avoka Transact Services topic <a target="_blank" href="/manager/admin/help/topics/groovy-services-api/groovy-service.html">Groovy Service</a>. 
+</p>
+
+<h3>Service Invoke Parameters</h3>
+
+<table class="script-parameters">
+<tr>
+  <th>Parameter</th> 
+  <th>Description</th>
+  <th  class="optional">Nullable</th>
+</tr>
+<tr>
+  <td class="paramName">svcDef</td> 
+  <td>the service definition value object, see <a target="_blank" href="../../help/javadoc-fluent/com/avoka/tm/vo/SvcDef.html">SvcDef</a></td>
+  <td class="optional">no</td>
+</tr>
+<tr>
+  <td class="paramName">request</td> 
+  <td>the servlet <a target="_blank" href="http://docs.oracle.com/javaee/7/api/javax/servlet/http/HttpServletRequest.html">HttpServletRequest</a></td>
+  <td class="optional">no</td>
+</tr>
+<tr>
+  <td class="paramName">user</td> 
+  <td>the authenticated user, see <a target="_blank" href="../../help/javadoc-fluent/com/avoka/tm/vo/User.html">User</a></td>
+  <td class="optional">yes</td>
+</tr>
+<tr>
+  <td class="paramName">request</td> 
+  <td>the servlet <a target="_blank" href="http://docs.oracle.com/javaee/7/api/javax/servlet/http/HttpServletRequest.html">HttpServletRequest</a> of the calling code</td>
+  <td class="optional">no</td>
+</tr>
+<tr>
+  <td class="paramName">params</td> 
+  <td>the map of parameters provided by the service caller, or request parameters map if called from REST Groovy Service Invoke API</td>
+  <td class="optional">yes</td>
+</tr>
+<tr>
+  <td class="paramName">params.job</td> 
+  <td>associated job action Job, added when Groovy Service called from <code>$func.invoke()</code></td>
+  <td class="optional">yes</td>
+</tr>
+<tr>
+  <td class="paramName">params.jobAction</td> 
+  <td>associated JobAction, added when Groovy Service called from <code>$func.invoke()</code></td>
+  <td class="optional">yes</td>
+</tr>
+</table>
+
+<h3>Script Result</h3>
+
+<p>The script can optionally return a value.</p>
+
+<h3>Error Handling</h3>
+
+<p>
+If an error occurs invoking the Groovy Service then the error will be recorded in the TM database error log. 
+</p>
