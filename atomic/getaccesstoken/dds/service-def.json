@@ -69,6 +69,7 @@
         "com/temenos/fnb/gsvc/atomic/api/response/base/AtomicBaseResponse.groovy",
         "com/temenos/fnb/gsvc/atomic/api/response/createaccesstoken/AtomicCreateAccessTokenResponse.groovy",
         "com/temenos/fnb/gsvc/atomic/api/vo/Account.groovy",
+        "com/temenos/fnb/gsvc/atomic/api/vo/Identity.groovy",
         "com/temenos/fnb/gsvc/atomic/api/vo/Data.groovy",
         "com/temenos/fnb/gsvc/atomic/enums/AtomicTransactStatus.groovy",
         "com/temenos/fnb/gsvc/atomic/reporter/AtomicReporter.groovy",

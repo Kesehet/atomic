@@ -2,6 +2,8 @@ package com.temenos.fnb.gsvc.atomic.api.query
 
 import com.avoka.taf.config.Env
 import com.avoka.taf.dao.model.Product
+import com.avoka.taf.dao.viewmodel.ViewCustomer
+import com.avoka.taf.dao.viewmodel.ViewCustomers
 import com.avoka.taf.dispatcher.Dispatcher
 import com.avoka.taf.dispatcher.exception.DispatchException
 import com.avoka.tm.http.HttpRequest
@@ -16,6 +18,7 @@ import com.temenos.fnb.gsvc.atomic.api.requests.createaccesstoken.AtomicCreateAc
 import com.temenos.fnb.gsvc.atomic.api.response.base.AtomicBaseResponse
 import com.temenos.fnb.gsvc.atomic.api.response.createaccesstoken.AtomicCreateAccessTokenResponse
 import com.temenos.fnb.gsvc.atomic.api.vo.Account
+import com.temenos.fnb.gsvc.atomic.api.vo.Identity
 import com.temenos.fnb.gsvc.forms.FormInfoManager
 import com.temenos.fnb.utils.FiservUtils
 import com.temenos.fnb.utils.TxnProxy
@@ -99,9 +102,12 @@ class AtomicQuery {
         int tokenLifetime = tokenLifetimeString as int
         List<Account> accounts = buildAccounts(newProducts, existingAccountsList, routingNumber, formProductMap)
         FormInfoManager formInfoManager = new FormInfoManager(txnProxy)
+        TxnProxy consumerPreApprovalTxnProxy = formInfoManager.getConsumerPreApprovalTxn()
+        Identity identity = buildIdentityFromTxn(consumerPreApprovalTxnProxy ?: txnProxy)
         return new AtomicCreateAccessTokenRequest()
                 .setAccounts(accounts)
-                .setIdentifier(formInfoManager.getConsumerPreApprovalTxn().trackingCode)
+                .setIdentity(identity)
+                .setIdentifier(consumerPreApprovalTxnProxy?.trackingCode ?: txnProxy.trackingCode)
                 .setTokenLifetime(tokenLifetime)
     }
 
@@ -155,8 +161,12 @@ class AtomicQuery {
         Contract.notBlank(tokenLifetimeString, "${CONFIG_SERVICE_KEY_API_TOKEN_LIFETIME} key in ConfigService")
         int tokenLifetime = tokenLifetimeString as int
         List<Account> accounts = buildAccounts(newProducts, existingAccountsMap, routingNumber, formProductMap)
+        FormInfoManager formInfoManager = new FormInfoManager(txnProxy)
+        TxnProxy consumerPreApprovalTxnProxy = formInfoManager.getConsumerPreApprovalTxn()
+        Identity identity = buildIdentityFromTxn(consumerPreApprovalTxnProxy ?: txnProxy)
         return new AtomicCreateAccessTokenRequest()
                 .setAccounts(accounts)
+                .setIdentity(identity)
                 .setIdentifier(txnProxy.trackingCode)
                 .setTokenLifetime(tokenLifetime)
     }
@@ -256,6 +266,28 @@ class AtomicQuery {
                 break
         }
         return ""
+    }
+
+    private static Identity buildIdentityFromTxn(TxnProxy txnProxy) {
+        if (txnProxy?.formXml == null || txnProxy.formXml.isBlank()) {
+            return null
+        }
+        ViewCustomers customers = ViewCustomers.restoreViewCustomersFromXml(txnProxy.appDoc)
+        ViewCustomer primaryCustomer = customers?.primary
+        if (!primaryCustomer) {
+            return null
+        }
+        def currentAddress = primaryCustomer.addressCurrent
+        return new Identity()
+                .setFirstName(primaryCustomer?.firstName)
+                .setLastName(primaryCustomer?.lastName)
+                .setPostalCode(currentAddress?.postalCode)
+                .setAddress(currentAddress?.street1)
+                .setAddress2(currentAddress?.street2)
+                .setCity(currentAddress?.city)
+                .setState(currentAddress?.state)
+                .setPhone(primaryCustomer?.phoneNumber)
+                .setEmail(primaryCustomer?.email)
     }
 
     static Map<String, String> getExistingAccountsMap(TxnProxy consumerPostApprovalTxnProxy) {
