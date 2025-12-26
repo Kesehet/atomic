@@ -82,6 +82,7 @@
         "com/temenos/fnb/gsvc/atomic/api/requests/createaccesstoken/AtomicCreateAccessTokenRequest.groovy",
         "com/temenos/fnb/gsvc/atomic/api/response/base/AtomicBaseResponse.groovy",
         "com/temenos/fnb/gsvc/atomic/api/vo/Account.groovy",
+        "com/temenos/fnb/gsvc/atomic/api/vo/Identity.groovy",
         "com/temenos/fnb/utils/FiservUtils.groovy",
         "com/temenos/fnb/gsvc/atomic/api/vo/Data.groovy",
         "com/avoka/taf/dispatcher/BaseRequest.groovy",

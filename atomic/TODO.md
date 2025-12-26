@@ -15,7 +15,7 @@
 
 ## DDS access-token flow
 
-- [ ] Wire request validation for `accounts` and `identity` fields.
+- [x] Wire request validation for `accounts` and `identity` fields.
 - [ ] Document DDS-specific configuration (routing/account constraints, allowed account types).
 - [x] Add DDS-focused sample payloads under the DDS service folder.
 
