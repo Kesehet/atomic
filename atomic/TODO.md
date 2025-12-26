@@ -21,7 +21,7 @@
 
 ## Payment Switch access-token flow
 
-- [ ] Wire request validation for `cards` and `identity` fields.
+- [x] Wire request validation for `cards` and `identity` fields.
 - [ ] Add Payment Switch sample payloads under the Payment Switch service folder.
 - [ ] Document Payment Switch-specific configuration (card brand, expiry format, etc.).
 
