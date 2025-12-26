@@ -1,0 +1,23 @@
+{
+  "identifier": "sample-tracking-code",
+  "cards": [
+    {
+      "title": "Premium Card",
+      "brand": "mastercard",
+      "number": "4242424242421111",
+      "expiry": "12/29",
+      "cvv": "887"
+    }
+  ],
+  "identity": {
+    "firstName": "Jane",
+    "lastName": "Doe",
+    "postalCode": "12345",
+    "address": "123 Lane St",
+    "address2": "Apt 987",
+    "city": "Provo",
+    "state": "UT",
+    "phone": "8011234576",
+    "email": "jane@example.com"
+  }
+}

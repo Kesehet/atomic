@@ -105,6 +105,13 @@ Splitting the access-token logic into two services ensures:
 }
 ```
 
+### Payment Switch configuration notes
+
+<!-- Keep card-specific configuration aligned with Atomic switch docs. -->
+- **Card brand**: Provide a supported brand label (for example, `mastercard` or `visa`).
+- **Expiry format**: Use `MM/YY` (e.g., `12/29`) in the `cards[].expiry` field.
+- **Card security**: Include `cards[].cvv` for validation with the switch provider.
+
 ### Key differences between DDS and Payment Switch requests
 
 <!-- Highlight request differences while keeping links to the official docs. -->
