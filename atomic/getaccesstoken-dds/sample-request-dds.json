@@ -1,0 +1,18 @@
+{
+  "identifier": "sample-tracking-code",
+  "tokenLifetime": 900,
+  "accounts": [
+    {
+      "accountNumber": "123456789",
+      "routingNumber": "021000021",
+      "type": "checking",
+      "title": "Everyday Checking"
+    },
+    {
+      "accountNumber": "987654321",
+      "routingNumber": "021000021",
+      "type": "savings",
+      "title": "Primary Savings"
+    }
+  ]
+}
