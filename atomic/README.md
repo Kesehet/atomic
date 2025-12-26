@@ -124,12 +124,14 @@ Both services rely on:
 - **AtomicQuery** for backend data retrieval and validation
 - **Shared utility helpers** in `utils/`
 - **Common enums/constants** under `enums/`
-- **Integration patterns** used by existing service directories (e.g., `getaccesstoken/`)
+- **Matched service definitions** so both services include the same shared libraries
+- **Integration patterns** used by the service directories (e.g., `getaccesstoken/dds/`)
 
 ## Repository layout (relevant paths)
 
 <!-- Provide navigation hints for maintainers. -->
-- `getaccesstoken/` — legacy DDS access-token implementation and artifacts (service definition, samples)
+- `getaccesstoken/dds/` — DDS access-token implementation and artifacts (service definition, samples)
+- `getaccesstoken/paymentSwitch/` — Payment Switch access-token implementation and artifacts
 - `utils/` — shared helper functions
 - `enums/` — shared constants
 - `api/` — shared API and integration plumbing

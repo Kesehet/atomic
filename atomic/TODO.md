@@ -5,19 +5,19 @@
 ## Service split
 
 - [x] Decide final service names and folders:
-  - **DDS**: `getaccesstoken-dds/`
-  - **Payment Switch**: `getaccesstoken-payment-switch/`
+  - **DDS**: `getaccesstoken/dds/`
+  - **Payment Switch**: `getaccesstoken/paymentSwitch/`
 - [x] Rename or copy the legacy `getaccesstoken/` implementation into the **DDS** service folder.
 - [x] Create a **Payment Switch** access-token service directory with its own `service-def.json`
   (mirroring the DDS layout but with card-focused validation).
-- [ ] Update any internal references that still point to the legacy `getaccesstoken/` path.
-- [ ] Ensure both services keep **shared library usage** aligned (`AtomicQuery`, `utils/`, `enums/`).
+- [x] Update any internal references that still point to the legacy `getaccesstoken/` path.
+- [x] Ensure both services keep **shared library usage** aligned (`AtomicQuery`, `utils/`, `enums/`).
 
 ## DDS access-token flow
 
 - [ ] Wire request validation for `accounts` and `identity` fields.
 - [ ] Document DDS-specific configuration (routing/account constraints, allowed account types).
-- [ ] Add DDS-focused sample payloads under the DDS service folder.
+- [x] Add DDS-focused sample payloads under the DDS service folder.
 
 ## Payment Switch access-token flow
 
