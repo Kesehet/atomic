@@ -4,11 +4,11 @@
 
 ## Service split
 
-- [ ] Decide final service names and folders, for example:
-  - **DDS**: `getaccesstoken-dds/` or `getaccesstoken-dds-service/`
-  - **Payment Switch**: `getaccesstoken-paymentswitch/` or `getaccesstoken-payment-switch-service/`
-- [ ] Rename or copy the legacy `getaccesstoken/` implementation into the **DDS** service folder.
-- [ ] Create a **Payment Switch** access-token service directory with its own `service-def.json`
+- [x] Decide final service names and folders:
+  - **DDS**: `getaccesstoken-dds/`
+  - **Payment Switch**: `getaccesstoken-payment-switch/`
+- [x] Rename or copy the legacy `getaccesstoken/` implementation into the **DDS** service folder.
+- [x] Create a **Payment Switch** access-token service directory with its own `service-def.json`
   (mirroring the DDS layout but with card-focused validation).
 - [ ] Update any internal references that still point to the legacy `getaccesstoken/` path.
 - [ ] Ensure both services keep **shared library usage** aligned (`AtomicQuery`, `utils/`, `enums/`).
