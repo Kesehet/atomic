@@ -27,7 +27,7 @@
 
 ## Cross-service consistency
 
-- [ ] Figure out what to do with multiple AtomicGetAccessTokenFluentFunction.groovy.
-- [ ] Share common request parsing helpers to reduce duplication.
-- [ ] Align logging/metrics names so DDS and Payment Switch can be compared side-by-side.
-- [ ] Update any integration, service def docs that still reference the legacy generic service name.
+- [x] Figure out what to do with multiple AtomicGetAccessTokenFluentFunction.groovy.
+- [x] Share common request parsing helpers to reduce duplication.
+- [x] Align logging/metrics names so DDS and Payment Switch can be compared side-by-side.
+- [x] Update any integration, service def docs that still reference the legacy generic service name.
