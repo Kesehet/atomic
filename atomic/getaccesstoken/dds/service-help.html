@@ -10,6 +10,27 @@ variety of contexts. For example you could a single function for doing both data
 form is resumed.
 </p>
 
+<h3>DDS configuration</h3>
+
+<p>
+The DDS access-token flow expects configuration and account data that determine which accounts are sent to Atomic:
+</p>
+
+<ul>
+  <li><strong>Routing number</strong>: set the Config Service key
+  <code>routingNumber</code> (see <code>FnbBaseSvc.CONFIG_SERVICE_KEY_ROUTING_NUMBER</code>).
+  This value is applied to every account sent in the access-token request.</li>
+  <li><strong>DDS-eligible products</strong>: only consumer deposit products that are marked
+  <code>IsEligibleForDDS</code> in the configured product catalog are included. The service ignores
+  non-eligible products.</li>
+  <li><strong>Existing account constraints</strong>: existing accounts are included only when their
+  <code>productIdent</code> matches a DDS-eligible product id and the account status is
+  <code>Active</code> (or has no status).</li>
+  <li><strong>Allowed account types</strong>: existing accounts map Fiserv account types to Atomic
+  types as follows: <code>DDA</code> → <code>checking</code>, <code>SDA</code> → <code>savings</code>.
+  New products use the product type (lowercased) as the Atomic account type.</li>
+</ul>
+
 <h3>Function API</h3>
 
 <p>
