@@ -66,6 +66,7 @@
         "com/temenos/fnb/gsvc/atomic/api/query/AtomicQuery.groovy",
         "com/temenos/fnb/gsvc/atomic/api/requests/base/AtomicBaseRequest.groovy",
         "com/temenos/fnb/gsvc/atomic/api/requests/createaccesstoken/AtomicCreateAccessTokenRequest.groovy",
+        "com/temenos/fnb/gsvc/atomic/api/requests/createaccesstoken/AtomicCreateAccessTokenPaymentSwitchRequest.groovy",
         "com/temenos/fnb/gsvc/atomic/api/response/base/AtomicBaseResponse.groovy",
         "com/temenos/fnb/gsvc/atomic/api/response/createaccesstoken/AtomicCreateAccessTokenResponse.groovy",
         "com/temenos/fnb/gsvc/atomic/api/vo/Account.groovy",
