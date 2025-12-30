@@ -38,19 +38,48 @@ class AccessTokenManager {
     }
 
     String getAccessTokenFromAtomic(List<Product> products, Map<String, String> existingAccountsMap, String servicePrefix) {
+        return getAccessTokenFromAtomicDds(products, existingAccountsMap, servicePrefix)
+    }
+
+    String getAccessTokenFromAtomicDds(List<Product> products, Map<String, String> existingAccountsMap, String servicePrefix) {
         logger.info("Calling Atomic for Access Token")
         AtomicQuery query = new AtomicQuery(logger, txnProxy)
-        AtomicCreateAccessTokenResponse response = query.processCreateAccessTokenQuery(products, existingAccountsMap, servicePrefix)
+        AtomicCreateAccessTokenResponse response = query.processCreateAccessTokenDdsQuery(products, existingAccountsMap, servicePrefix)
         String accessToken = response.getAccessToken()
         logger.info("Access Token retrieved: ${accessToken != null && !accessToken.isBlank()}")
         return accessToken
     }
 
     String getAccessTokenFromAtomic(List<Product> products, List<Map<String, Object>> existingAccountsList, String servicePrefix, Map<String, String> formProductMap) {
+        return getAccessTokenFromAtomicDds(products, existingAccountsList, servicePrefix, formProductMap)
+    }
+
+    String getAccessTokenFromAtomicDds(List<Product> products, List<Map<String, Object>> existingAccountsList, String servicePrefix, Map<String, String> formProductMap) {
         logger.info("Calling Atomic for Access Token")
         String accessToken = ""
         AtomicQuery query = new AtomicQuery(logger, txnProxy)
-        AtomicCreateAccessTokenResponse response = query.processCreateAccessTokenQuery(products, existingAccountsList, servicePrefix, formProductMap)
+        AtomicCreateAccessTokenResponse response = query.processCreateAccessTokenDdsQuery(products, existingAccountsList, servicePrefix, formProductMap)
+        if (response != null)
+            accessToken = response.getAccessToken()
+
+        logger.info("Access Token retrieved: ${accessToken != null && !accessToken.isBlank()}")
+        return accessToken
+    }
+
+    String getAccessTokenFromAtomicPaymentSwitch(List<Product> products, Map<String, String> existingAccountsMap, String servicePrefix) {
+        logger.info("Calling Atomic for Access Token")
+        AtomicQuery query = new AtomicQuery(logger, txnProxy)
+        AtomicCreateAccessTokenResponse response = query.processCreateAccessTokenPaymentSwitchQuery(products, existingAccountsMap, servicePrefix)
+        String accessToken = response.getAccessToken()
+        logger.info("Access Token retrieved: ${accessToken != null && !accessToken.isBlank()}")
+        return accessToken
+    }
+
+    String getAccessTokenFromAtomicPaymentSwitch(List<Product> products, List<Map<String, Object>> existingAccountsList, String servicePrefix, Map<String, String> formProductMap) {
+        logger.info("Calling Atomic for Access Token")
+        String accessToken = ""
+        AtomicQuery query = new AtomicQuery(logger, txnProxy)
+        AtomicCreateAccessTokenResponse response = query.processCreateAccessTokenPaymentSwitchQuery(products, existingAccountsList, servicePrefix, formProductMap)
         if (response != null)
             accessToken = response.getAccessToken()
 

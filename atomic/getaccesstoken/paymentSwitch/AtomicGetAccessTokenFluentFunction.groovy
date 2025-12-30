@@ -79,7 +79,7 @@ class AtomicGetAccessTokenFluentFunction extends FnbBaseFluentFunction {
             logger.error("Did not get valid product or existing Account eligible for DDS..")
             return generateSuccessfulResult(RESULT_MESSAGE_NO_CONSUMER_DEPOSIT_PRODUCTS)
         }
-        accessToken = accessTokenManager.getAccessTokenFromAtomic(consumerDepositProductsDDSEligible, existingAccountsList, TXN_PROP_SERVICE_PREFIX, formProductsAcctMap)
+        accessToken = accessTokenManager.getAccessTokenFromAtomicPaymentSwitch(consumerDepositProductsDDSEligible, existingAccountsList, TXN_PROP_SERVICE_PREFIX, formProductsAcctMap)
         accessTokenManager.setAccessTokenTxnProps(accessToken)
         return generateSuccessfulResult(RESULT_MESSAGE_CREATED_NEW_ACCESS_TOKEN, accessToken)
     }

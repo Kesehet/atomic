@@ -14,6 +14,8 @@ import com.avoka.tm.util.Logger
 import com.google.gson.Gson
 import com.temenos.fnb.gsvc.FnbBaseSvc
 import com.temenos.fnb.gsvc.atomic.api.requests.base.AtomicBaseRequest
+import com.temenos.fnb.gsvc.atomic.api.requests.createaccesstoken.AtomicCreateAccessTokenDdsRequest
+import com.temenos.fnb.gsvc.atomic.api.requests.createaccesstoken.AtomicCreateAccessTokenPaymentSwitchRequest
 import com.temenos.fnb.gsvc.atomic.api.requests.createaccesstoken.AtomicCreateAccessTokenRequest
 import com.temenos.fnb.gsvc.atomic.api.response.base.AtomicBaseResponse
 import com.temenos.fnb.gsvc.atomic.api.response.createaccesstoken.AtomicCreateAccessTokenResponse
@@ -77,13 +79,13 @@ class AtomicQuery {
         ]
     }
 
-    AtomicCreateAccessTokenResponse processCreateAccessTokenQuery(List<Product> products, Map<String, String> existingAccountsMap, String svcTxnPropPrefix) {
-        AtomicCreateAccessTokenRequest request = buildCreateAccessTokenRequest(products, existingAccountsMap, null)
+    AtomicCreateAccessTokenResponse processCreateAccessTokenDdsQuery(List<Product> products, Map<String, String> existingAccountsMap, String svcTxnPropPrefix) {
+        AtomicCreateAccessTokenDdsRequest request = buildCreateAccessTokenDdsRequest(products, existingAccountsMap, null)
         return (AtomicCreateAccessTokenResponse) processAtomicQuery(request, svcTxnPropPrefix, AtomicCreateAccessTokenResponse)
     }
 
-    AtomicCreateAccessTokenResponse processCreateAccessTokenQuery(List<Product> products, List<Map<String, Object>> existingAccountsList, String svcTxnPropPrefix, Map<String, String> formProductMap) {
-        AtomicCreateAccessTokenRequest request = buildCreateAccessTokenRequest(products, existingAccountsList, formProductMap)
+    AtomicCreateAccessTokenResponse processCreateAccessTokenDdsQuery(List<Product> products, List<Map<String, Object>> existingAccountsList, String svcTxnPropPrefix, Map<String, String> formProductMap) {
+        AtomicCreateAccessTokenDdsRequest request = buildCreateAccessTokenDdsRequest(products, existingAccountsList, formProductMap)
         if (request.getAccounts() == null || request.getAccounts().size() == 0 ||
                 (request.getAccounts().size() >= 1 && request.getAccounts()[0].getAccountNumber() == null)
                 || (request.getAccounts().size() >= 1 && request.getAccounts()[0].getAccountNumber().isEmpty())) {
@@ -94,7 +96,32 @@ class AtomicQuery {
         return (AtomicCreateAccessTokenResponse) processAtomicQuery(request, svcTxnPropPrefix, AtomicCreateAccessTokenResponse)
     }
 
-    AtomicCreateAccessTokenRequest buildCreateAccessTokenRequest(List<Product> newProducts, List<Map<String, Object>> existingAccountsList, Map<String, String> formProductMap) {
+    AtomicCreateAccessTokenResponse processCreateAccessTokenPaymentSwitchQuery(List<Product> products, Map<String, String> existingAccountsMap, String svcTxnPropPrefix) {
+        AtomicCreateAccessTokenPaymentSwitchRequest request = buildCreateAccessTokenPaymentSwitchRequest(products, existingAccountsMap, null)
+        return (AtomicCreateAccessTokenResponse) processAtomicQuery(request, svcTxnPropPrefix, AtomicCreateAccessTokenResponse)
+    }
+
+    AtomicCreateAccessTokenResponse processCreateAccessTokenPaymentSwitchQuery(List<Product> products, List<Map<String, Object>> existingAccountsList, String svcTxnPropPrefix, Map<String, String> formProductMap) {
+        AtomicCreateAccessTokenPaymentSwitchRequest request = buildCreateAccessTokenPaymentSwitchRequest(products, existingAccountsList, formProductMap)
+        if (request.getAccounts() == null || request.getAccounts().size() == 0 ||
+                (request.getAccounts().size() >= 1 && request.getAccounts()[0].getAccountNumber() == null)
+                || (request.getAccounts().size() >= 1 && request.getAccounts()[0].getAccountNumber().isEmpty())) {
+
+            logger.info("Did not get the account list to send to atomic. Not making call to atomic... ")
+            return null;
+        }
+        return (AtomicCreateAccessTokenResponse) processAtomicQuery(request, svcTxnPropPrefix, AtomicCreateAccessTokenResponse)
+    }
+
+    AtomicCreateAccessTokenDdsRequest buildCreateAccessTokenDdsRequest(List<Product> newProducts, List<Map<String, Object>> existingAccountsList, Map<String, String> formProductMap) {
+        return buildCreateAccessTokenRequest(new AtomicCreateAccessTokenDdsRequest(), newProducts, existingAccountsList, formProductMap)
+    }
+
+    AtomicCreateAccessTokenPaymentSwitchRequest buildCreateAccessTokenPaymentSwitchRequest(List<Product> newProducts, List<Map<String, Object>> existingAccountsList, Map<String, String> formProductMap) {
+        return buildCreateAccessTokenRequest(new AtomicCreateAccessTokenPaymentSwitchRequest(), newProducts, existingAccountsList, formProductMap)
+    }
+
+    private <T extends AtomicCreateAccessTokenRequest> T buildCreateAccessTokenRequest(T request, List<Product> newProducts, List<Map<String, Object>> existingAccountsList, Map<String, String> formProductMap) {
         String routingNumber = Env.vars.get(FnbBaseSvc.CONFIG_SERVICE_KEY_ROUTING_NUMBER)
         Contract.notBlank(routingNumber, "${FnbBaseSvc.CONFIG_SERVICE_KEY_ROUTING_NUMBER} key in ConfigService")
         String tokenLifetimeString = Env.vars.get(CONFIG_SERVICE_KEY_API_TOKEN_LIFETIME) as String
@@ -104,7 +131,7 @@ class AtomicQuery {
         FormInfoManager formInfoManager = new FormInfoManager(txnProxy)
         TxnProxy consumerPreApprovalTxnProxy = formInfoManager.getConsumerPreApprovalTxn()
         Identity identity = buildIdentityFromTxn(consumerPreApprovalTxnProxy ?: txnProxy)
-        return new AtomicCreateAccessTokenRequest()
+        return request
                 .setAccounts(accounts)
                 .setIdentity(identity)
                 .setIdentifier(consumerPreApprovalTxnProxy?.trackingCode ?: txnProxy.trackingCode)
@@ -154,7 +181,15 @@ class AtomicQuery {
         return accounts
     }
 
-    AtomicCreateAccessTokenRequest buildCreateAccessTokenRequest(List<Product> newProducts, Map<String, String> existingAccountsMap, Map<String, String> formProductMap) {
+    AtomicCreateAccessTokenDdsRequest buildCreateAccessTokenDdsRequest(List<Product> newProducts, Map<String, String> existingAccountsMap, Map<String, String> formProductMap) {
+        return buildCreateAccessTokenRequest(new AtomicCreateAccessTokenDdsRequest(), newProducts, existingAccountsMap, formProductMap)
+    }
+
+    AtomicCreateAccessTokenPaymentSwitchRequest buildCreateAccessTokenPaymentSwitchRequest(List<Product> newProducts, Map<String, String> existingAccountsMap, Map<String, String> formProductMap) {
+        return buildCreateAccessTokenRequest(new AtomicCreateAccessTokenPaymentSwitchRequest(), newProducts, existingAccountsMap, formProductMap)
+    }
+
+    private <T extends AtomicCreateAccessTokenRequest> T buildCreateAccessTokenRequest(T request, List<Product> newProducts, Map<String, String> existingAccountsMap, Map<String, String> formProductMap) {
         String routingNumber = Env.vars.get(FnbBaseSvc.CONFIG_SERVICE_KEY_ROUTING_NUMBER)
         Contract.notBlank(routingNumber, "${FnbBaseSvc.CONFIG_SERVICE_KEY_ROUTING_NUMBER} key in ConfigService")
         String tokenLifetimeString = Env.vars.get(CONFIG_SERVICE_KEY_API_TOKEN_LIFETIME) as String
@@ -164,7 +199,7 @@ class AtomicQuery {
         FormInfoManager formInfoManager = new FormInfoManager(txnProxy)
         TxnProxy consumerPreApprovalTxnProxy = formInfoManager.getConsumerPreApprovalTxn()
         Identity identity = buildIdentityFromTxn(consumerPreApprovalTxnProxy ?: txnProxy)
-        return new AtomicCreateAccessTokenRequest()
+        return request
                 .setAccounts(accounts)
                 .setIdentity(identity)
                 .setIdentifier(txnProxy.trackingCode)

@@ -14,7 +14,7 @@ import com.avoka.tm.vo.Txn
 import com.temenos.fnb.gsvc.FnbBaseSvc
 import com.temenos.fnb.gsvc.atomic.accesstoken.AccessTokenManager
 import com.temenos.fnb.gsvc.atomic.api.query.AtomicQuery
-import com.temenos.fnb.gsvc.atomic.api.requests.createaccesstoken.AtomicCreateAccessTokenRequest
+import com.temenos.fnb.gsvc.atomic.api.requests.createaccesstoken.AtomicCreateAccessTokenDdsRequest
 import com.temenos.fnb.gsvc.atomic.utils.AtomicUtils
 import com.temenos.fnb.gsvc.forms.MockFormInfoSetupManager
 import com.temenos.fnb.gsvc.forms.page.PageConstants
@@ -364,7 +364,7 @@ class AtomicGetAccessTokenFluentFunctionTest extends TransactSDKUnitTest {
         List<Product> products = Product.restoreProductsFromXml(dashboardTxnProxy.getAppDoc())
         products = Product.filterForConsumerDepositProducts(products)
         Map<String, String> existingAccountsMap = AccessTokenRequestHelper.getExistingAccountsMap(consumerPostApprovalTxnProxy)
-        AtomicCreateAccessTokenRequest request = new AtomicQuery(logger, dashboardTxnProxy).buildCreateAccessTokenRequest(products, existingAccountsMap, existingAccountsMap)
+        AtomicCreateAccessTokenDdsRequest request = new AtomicQuery(logger, dashboardTxnProxy).buildCreateAccessTokenDdsRequest(products, existingAccountsMap, existingAccountsMap)
         TestUtils.registerMockRequestResponse(request, responseStatus, mockResponse)
     }
 
